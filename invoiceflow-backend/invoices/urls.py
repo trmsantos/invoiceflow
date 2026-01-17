@@ -1,6 +1,12 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from . import views
 
-# Mesmo que não tenhas rotas ainda, a lista precisa de existir
+router = DefaultRouter()
+router.register(r'', views.InvoiceViewSet, basename='invoice')
+router.register(r'clients', views.ClientViewSet, basename='client')
+router.register(r'payments', views.PaymentViewSet, basename='payment')
+
 urlpatterns = [
-    # Exemplo: path('login/', SomeView.as_view(), name='login'),
+    path('', include(router.urls)),
 ]

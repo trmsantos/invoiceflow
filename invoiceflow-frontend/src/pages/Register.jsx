@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuth } from './../hooks/useAuth'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/common/Card'
 import { Button } from '@/components/common/Button'
 import { Input, Label } from '@/components/common/Input'
@@ -13,6 +13,7 @@ export default function Register() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    password2: '',
     firstName: '',
     lastName: '',
   })
@@ -26,6 +27,17 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    if (formData.password !== formData.password2) {
+      toast.error('Passwords do not match!')
+      return
+    }
+    
+    if (formData.password.length < 8) {
+      toast.error('Password must be at least 8 characters!')
+      return
+    }
+    
     const success = await register(
       formData.email,
       formData.password,
@@ -90,6 +102,17 @@ export default function Register() {
                 type="password"
                 name="password"
                 value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <div>
+              <Label>Confirm Password</Label>
+              <Input 
+                type="password"
+                name="password2"
+                value={formData.password2}
                 onChange={handleChange}
                 placeholder="••••••••"
                 required

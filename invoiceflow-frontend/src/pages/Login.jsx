@@ -19,12 +19,18 @@ export default function Login() {
     const success = await login(email, password)
     if (success) {
       toast.success('Login successful!')
-      navigate('/')
+      navigate('/dashboard')
     }
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+          <a 
+            href="/" 
+            className="absolute top-6 left-6 text-blue-600 hover:underline font-semibold"
+          >
+            ← Back Home
+          </a>
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-2xl">InvoiceFlow</CardTitle>

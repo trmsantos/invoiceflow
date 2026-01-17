@@ -1,22 +1,29 @@
 import { create } from 'zustand'
 import api from '@/services/api'
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   user: null,
   loading: false,
   error: null,
+  initialized: false,  // ← ADICIONA ISTO
 
   // Hydrate from localStorage on init
   init: async () => {
+    // ← ADICIONA ESTA VERIFICAÇÃO
+    if (get().initialized) return
+    
     const token = localStorage.getItem('access_token')
     if (token) {
       try {
         const response = await api.get('/auth/me/')
-        set({ user: response.data })
+        set({ user: response.data, initialized: true })
       } catch (error) {
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')
+        set({ initialized: true })
       }
+    } else {
+      set({ initialized: true })
     }
   },
 
@@ -26,6 +33,7 @@ export const useAuthStore = create((set) => ({
       const response = await api.post('/auth/register/', {
         email,
         password,
+        password2: password,
         first_name: firstName,
         last_name: lastName,
       })
@@ -37,7 +45,7 @@ export const useAuthStore = create((set) => ({
       return true
     } catch (error) {
       set({
-        error: error.response?.data?.detail || 'Registration failed',
+        error: error.response?.data?.detail || error.response?.data?.password2?.[0] || 'Registration failed',
         loading: false
       })
       return false
@@ -66,6 +74,7 @@ export const useAuthStore = create((set) => ({
   logout: () => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
-    set({ user: null })
+    set({ user: null, initialized: false })
   },
 }))
+

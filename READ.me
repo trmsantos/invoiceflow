@@ -1,0 +1,207 @@
+
+##Prompts to local
+
+### Pré-requisitos
+- Node.js 21+ (`node --version`)
+- Python 3.11+ (`python --version`)
+- Docker & Docker Compose (`docker --version`)
+- Git
+
+### Clonar Repositório
+git clone https://github.com/seu-usuario/invoiceflow.git
+cd invoiceflow
+
+
+### 2️Setup Backend (Django)
+
+cd invoiceflow-backend
+
+# Criar virtual environment
+python -m venv venv
+
+# Ativar venv
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+
+# Instalar dependências
+pip install -r requirements.txt
+
+# Criar ficheiro .env
+copy .env.example .env
+# Editar .env com as suas credenciais
+
+# Executar migrações
+python manage.py migrate
+
+# Criar superuser
+python manage.py createsuperuser
+
+# Iniciar servidor
+python manage.py runserver 8000
+```
+
+**Backend rodando em:** `http://localhost:8000/`
+
+### 3️⃣ Setup Frontend (React + Vite)
+```bash
+# Noutra aba do terminal
+cd invoiceflow-frontend
+
+# Instalar dependências
+npm install
+
+# Criar ficheiro .env
+copy .env.example .env
+
+# Iniciar servidor dev
+npm run dev
+```
+
+**Frontend rodando em:** `http://localhost:5173/`
+
+###  Setup Database (Docker)
+# Na pasta raiz (invoiceflow/)
+docker-compose up -d
+
+# Verificar containers
+docker-compose ps
+```
+
+**PostgreSQL rodando em:** `localhost:5432`
+
+---
+
+## 📊 Estrutura do Projeto
+```
+invoiceflow/
+├── invoiceflow-backend/        # Django API
+│   ├── users/                 # Autenticação
+│   ├── invoices/              # Gestão de facturas
+│   ├── billing/               # Gestão de subscrição
+│   ├── config/                # Configurações
+│   ├── manage.py
+│   └── requirements.txt
+│
+├── invoiceflow-frontend/       # React + Vite
+│   ├── src/
+│   │   ├── pages/            # Páginas da app
+│   │   ├── components/       # Componentes reutilizáveis
+│   │   ├── hooks/            # Custom hooks
+│   │   ├── services/         # API services
+│   │   ├── store/            # Zustand state
+│   │   └── App.jsx
+│   ├── package.json
+│   └── vite.config.js
+│
+├── docker-compose.yml         # Database (PostgreSQL + Redis)
+└── README.md
+```
+
+---
+
+## 🔑 Variáveis de Ambiente
+
+### Backend (.env)
+```env
+SECRET_KEY=sua-chave-secreta-aqui
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=invoiceflow_prod
+DB_USER=invoiceflow_user
+DB_PASSWORD=invoiceflow_secure_password_123
+DB_HOST=localhost
+DB_PORT=5432
+
+STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
+
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+```
+
+### Frontend (.env)
+```env
+VITE_API_URL=http://localhost:8000/api
+VITE_STRIPE_PUBLIC_KEY=pk_test_xxxxx
+```
+
+---
+
+## 🧪 Testar a Aplicação
+
+1. **Aceder ao Frontend:** `http://localhost:5173/`
+2. **Criar conta** ou fazer login
+3. **Criar invoices** e testar funcionalidades
+4. **Admin Django:** `http://localhost:8000/admin/`
+
+---
+
+## 📚 Endpoints Principais
+
+### Autenticação
+- `POST /api/auth/register/` - Registar novo utilizador
+- `POST /api/auth/login/` - Fazer login
+- `GET /api/auth/me/` - Dados do utilizador logado
+- `POST /api/auth/logout/` - Logout
+
+### Invoices
+- `GET /api/invoices/` - Listar invoices
+- `POST /api/invoices/` - Criar invoice
+- `PUT /api/invoices/{id}/` - Editar invoice
+- `DELETE /api/invoices/{id}/` - Apagar invoice
+
+### Clientes
+- `GET /api/clients/` - Listar clientes
+- `POST /api/clients/` - Criar cliente
+
+---
+
+## 🔧 Troubleshooting
+
+### Frontend branco?
+```bash
+cd invoiceflow-frontend
+npm install
+npm run dev
+```
+
+### Backend erro na migração?
+```bash
+python manage.py migrate --run-syncdb
+```
+
+### Docker não funciona?
+```bash
+docker-compose down -v
+docker-compose up -d
+```
+
+### Porta 8000/5173 em uso?
+```bash
+# Matar processo na porta 8000
+lsof -i :8000 | grep LISTEN | awk '{print $2}' | xargs kill -9
+
+# Matar processo na porta 5173
+lsof -i :5173 | grep LISTEN | awk '{print $2}' | xargs kill -9
+```
+
+---
+
+## 🚀 Deploy em Produção
+
+Ver documentação em `DEPLOY.md` (em breve)
+
+---
+
+## 📝 Licença
+
+MIT License - vê LICENSE.md para detalhes
+
+---
+
+## 💬 Suporte
+
+Para dúvidas, abre uma issue no GitHub ou contacta support@invoiceflow.com

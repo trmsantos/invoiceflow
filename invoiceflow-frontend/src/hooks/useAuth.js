@@ -7,7 +7,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     init()
-  }, [init])
+  }, [])
 
   return {
     user,
