@@ -17,7 +17,7 @@ import NotFound from '@/pages/NotFound'
 import MainLayout from '@/layouts/MainLayout'
 
 function App() {
-  const { isAuthenticated, loading } = useAuth()
+  const { isAuthenticated, loading, user } = useAuth()
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
@@ -26,6 +26,8 @@ function App() {
     }, 1000)
     return () => clearTimeout(timer)
   }, [])
+
+  console.log('App State:', { user, isAuthenticated, loading, isReady })
 
   if (loading || !isReady) {
     return (
@@ -43,24 +45,29 @@ function App() {
       <Toaster />
       <BrowserRouter>
         <Routes>
-          {/* Landing Page - Público */}
+          {/* Rotas Públicas */}
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Dashboard - Protegido */}
-          {isAuthenticated ? (
+          {/* Rotas Protegidas */}
+          {isAuthenticated && user ? (
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/invoices" element={<InvoiceList />} />
               <Route path="/invoices/new" element={<InvoiceCreate />} />
               <Route path="/invoices/:id" element={<InvoiceDetail />} />
-              <Route path="/billing" element={<div>Billing Page (Coming Soon)</div>} />
+              <Route path="/billing" element={<div className="p-6">Billing Page (Coming Soon)</div>} />
               <Route path="*" element={<NotFound />} />
             </Route>
           ) : null}
 
-          {/* Fallback */}
+          {/* Se não autenticado e tentar aceder a rota protegida */}
+          {!isAuthenticated && (
+            <Route path="/dashboard" element={<Navigate to="/login" replace />} />
+          )}
+
+          {/* 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

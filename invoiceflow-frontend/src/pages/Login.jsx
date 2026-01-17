@@ -16,10 +16,19 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    console.log('Login attempt with:', { email, password }) 
+    
     const success = await login(email, password)
+    
+    console.log('Login success:', success) 
+    
     if (success) {
+      console.log('Redirecting to dashboard...')
       toast.success('Login successful!')
-      navigate('/dashboard')
+      
+      setTimeout(() => {
+        navigate('/dashboard')
+      }, 500)
     }
   }
 

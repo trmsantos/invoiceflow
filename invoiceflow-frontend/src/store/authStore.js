@@ -5,11 +5,10 @@ export const useAuthStore = create((set, get) => ({
   user: null,
   loading: false,
   error: null,
-  initialized: false,  // ← ADICIONA ISTO
+  initialized: false,  
 
   // Hydrate from localStorage on init
   init: async () => {
-    // ← ADICIONA ESTA VERIFICAÇÃO
     if (get().initialized) return
     
     const token = localStorage.getItem('access_token')
@@ -57,12 +56,21 @@ export const useAuthStore = create((set, get) => ({
     try {
       const response = await api.post('/auth/login/', { email, password })
 
+      console.log('Login response:', response.data)
+
       localStorage.setItem('access_token', response.data.access)
       localStorage.setItem('refresh_token', response.data.refresh)
 
-      set({ user: response.data.user, loading: false })
+      set({ 
+        user: response.data.user, 
+        loading: false 
+      })
+      
+      console.log('User set to:', response.data.user)
+      
       return true
     } catch (error) {
+      console.error('Login error:', error) 
       set({
         error: error.response?.data?.detail || 'Login failed',
         loading: false

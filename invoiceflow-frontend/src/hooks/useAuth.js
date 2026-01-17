@@ -1,26 +1,25 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
 
 export const useAuth = () => {
-  const { user, loading, error, login, register, logout, init } = useAuthStore()
-
+  const store = useAuthStore()
+  
   useEffect(() => {
-    init()
-  }, [])
+    console.log('useAuth: Calling init()')
+    store.init()
+  }, []) // ← Dependency array vazio
 
   return {
-    user,
-    loading,
-    error,
-    isAuthenticated: !!user,
-    login,
-    register,
-    logout,
+    user: store.user,
+    loading: store.loading,
+    error: store.error,
+    isAuthenticated: !!store.user, // ← True se user existe
+    login: store.login,
+    register: store.register,
+    logout: store.logout,
   }
 }
 
-// Hook: Require Authentication
 export const useRequireAuth = () => {
   const navigate = useNavigate()
   const { isAuthenticated, loading } = useAuth()
