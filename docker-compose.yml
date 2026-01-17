@@ -1,0 +1,46 @@
+﻿version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: invoiceflow_postgres
+    environment:
+      POSTGRES_DB: invoiceflow_prod
+      POSTGRES_USER: invoiceflow_user
+      POSTGRES_PASSWORD: invoiceflow_secure_password_123
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C.UTF-8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - invoiceflow_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U invoiceflow_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: invoiceflow_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - invoiceflow_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  invoiceflow_network:
+    driver: bridge
