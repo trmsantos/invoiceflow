@@ -150,3 +150,9 @@ if not DEBUG:
     }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Celery Configuration
+CELERY_ALWAYS_EAGER = True  
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'

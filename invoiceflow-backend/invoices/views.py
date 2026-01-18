@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Invoice, InvoiceItem, Client, Payment
 from .serializers import InvoiceSerializer, ClientSerializer, PaymentSerializer, InvoiceItemSerializer
+from .tasks import send_invoice_email_sync  # ← Muda isto
 
 class ClientViewSet(viewsets.ModelViewSet):
     """CRUD para Clientes"""
@@ -52,10 +53,11 @@ class InvoiceViewSet(viewsets.ModelViewSet):
     def send(self, request, pk=None):
         """Enviar invoice por email"""
         invoice = self.get_object()
-        invoice.status = 'sent'
-        invoice.save()
-        # TODO: Enviar email
-        return Response({'status': 'Invoice sent'})
+        
+        # Enviar email synchronously
+        send_invoice_email_sync(invoice.id, invoice.client_email)
+        
+        return Response({'status': 'Invoice sent successfully'})
 
 class PaymentViewSet(viewsets.ModelViewSet):
     """CRUD para Payments"""

@@ -5,28 +5,17 @@ export const useAuth = () => {
   const store = useAuthStore()
   
   useEffect(() => {
-    console.log('useAuth: Calling init()')
+    console.log('useAuth: Calling init() once')
     store.init()
-  }, []) // ← Dependency array vazio
+  }, []) 
 
   return {
     user: store.user,
     loading: store.loading,
     error: store.error,
-    isAuthenticated: !!store.user, // ← True se user existe
+    isAuthenticated: !!store.user,
     login: store.login,
     register: store.register,
     logout: store.logout,
   }
-}
-
-export const useRequireAuth = () => {
-  const navigate = useNavigate()
-  const { isAuthenticated, loading } = useAuth()
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      navigate('/login')
-    }
-  }, [isAuthenticated, loading, navigate])
 }
