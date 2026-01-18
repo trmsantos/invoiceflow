@@ -59,9 +59,9 @@ WSGI_APPLICATION = 'setting.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'invoiceflow_prod',
-        'USER': 'invoiceflow_user',
-        'PASSWORD': 'invoiceflow_secure_password_123',
+        'NAME': 'invoiceflow',
+        'USER': 'invoiceflow',
+        'PASSWORD': 'Invoiceflow_app##',
         'HOST': 'localhost',
         'PORT': '5432',
     }
