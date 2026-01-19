@@ -4,6 +4,8 @@ import api from '@/services/api'
 import { toast } from 'sonner'
 
 export default function Dashboard() {
+  console.log('Dashboard component rendering') // Log added to check if Dashboard is rendered
+
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
 

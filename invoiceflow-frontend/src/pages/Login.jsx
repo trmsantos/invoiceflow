@@ -1,4 +1,3 @@
-// src/pages/Login.jsx
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
@@ -16,19 +15,18 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log('Login attempt with:', { email, password }) 
-    
+    console.log('Login component: Attempting login with email:', email) 
     const success = await login(email, password)
     
-    console.log('Login success:', success) 
+    console.log('Login component: Login success:', success) 
     
     if (success) {
-      console.log('Redirecting to dashboard...')
+      console.log('Login component: Redirecting to dashboard') 
       toast.success('Login successful!')
       
-      setTimeout(() => {
-        navigate('/dashboard')
-      }, 500)
+      navigate('/dashboard')
+    } else {
+      console.log('Login component: Login failed, staying on login page') 
     }
   }
 

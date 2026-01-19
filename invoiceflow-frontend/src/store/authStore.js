@@ -7,21 +7,22 @@ export const useAuthStore = create((set, get) => ({
   error: null,
   initialized: false,  
 
-  // Hydrate from localStorage on init
   init: async () => {
     const token = localStorage.getItem('access_token')
-    console.log('authStore init: token =', token)
     
     if (token) {
       try {
         const response = await api.get('/auth/me/')
-        console.log('authStore init: user =', response.data)
-        set({ user: response.data })
+        set({ user: response.data, initialized: true }) 
       } catch (error) {
         console.error('authStore init error:', error)
         localStorage.removeItem('access_token')
         localStorage.removeItem('refresh_token')
+        // ERRO: Define user como null MAS initialized como true (já acabou de verificar)
+        set({ user: null, initialized: true }) 
       }
+    } else {
+      set({ initialized: true }) 
     }
   },
 
