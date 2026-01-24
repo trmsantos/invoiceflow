@@ -12,20 +12,17 @@ import InvoiceList from '@/pages/InvoiceList'
 import InvoiceCreate from '@/pages/InvoiceCreate'
 import InvoiceDetail from '@/pages/InvoiceDetail'
 import NotFound from '@/pages/NotFound'
+import Billing from '@/pages/Billing'
 
 // Layout
 import MainLayout from '@/layouts/MainLayout'
 
-// 1. Componente que protege as rotas
 const ProtectedRoute = () => {
-  const { isAuthenticated, initialized } = useAuth()
-
-  // Se a store ainda está a ver se existe token, não mostra nada (ou spinner)
-  if (!initialized) return null 
-
-  // Se estiver logado, deixa passar (<Outlet />), senão manda para login
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />
-}
+  const { isAuthenticated, initialized } = useAuth();
+  if (!initialized) return null;
+  // true evita que o login fique no histórico atrás do dashboard
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+};
 
 // 2. Componente que impede utilizadores logados de verem o login
 const PublicRoute = () => {
@@ -48,26 +45,18 @@ function App() {
   return (
     <>
       <Toaster />
-      {/* REMOVIDA a prop 'key'. Isto impede o Router de reiniciar! */}
       <BrowserRouter>
         <Routes>
-          {/* Rota Pública Real */}
           <Route path="/" element={<Landing />} />
-
-          {/* Rotas de Acesso (Login/Register) - Só acessíveis se NÃO estiver logado */}
-          <Route element={<PublicRoute />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Route>
-
-          {/* Rotas Protegidas - Só acessíveis se ESTIVER logado */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/invoices" element={<InvoiceList />} />
               <Route path="/invoices/new" element={<InvoiceCreate />} />
               <Route path="/invoices/:id" element={<InvoiceDetail />} />
-              <Route path="/billing" element={<div className="p-6">Billing Page</div>} />
+              <Route path="/billing" element={<Billing />} />
             </Route>
           </Route>
 

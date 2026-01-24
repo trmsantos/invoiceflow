@@ -52,30 +52,26 @@ export const useAuthStore = create((set, get) => ({
   },
 
   login: async (email, password) => {
-    set({ loading: true, error: null })
+    set({ loading: true, error: null }) // Limpa erros anteriores ao tentar novo login
     try {
       const response = await api.post('/auth/login/', { email, password })
-
-      console.log('Login response:', response.data)
-
       localStorage.setItem('access_token', response.data.access)
       localStorage.setItem('refresh_token', response.data.refresh)
 
       set({ 
         user: response.data.user, 
-        loading: false 
+        loading: false,
+        initialized: true 
       })
-      
-      console.log('User set to:', response.data.user)
-      
       return true
     } catch (error) {
-      console.error('Login error:', error) 
+      const errorMessage = error.response?.data?.detail || 'Login failed. Please check your credentials.'
       set({
-        error: error.response?.data?.detail || 'Login failed',
-        loading: false
+        error: errorMessage,
+        loading: false,
+        user: null
       })
-      return false
+      return false // Retorna false para o componente não navegar
     }
   },
 

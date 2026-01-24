@@ -26,6 +26,7 @@ export default function Login() {
       
       navigate('/dashboard')
     } else {
+      toast.error('Login failed. Please check your credentials.')
       console.log('Login component: Login failed, staying on login page') 
     }
   }

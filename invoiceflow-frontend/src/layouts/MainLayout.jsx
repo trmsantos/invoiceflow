@@ -17,7 +17,7 @@ export default function MainLayout() {
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-8">
-            <h1 className="text-2xl font-bold text-blue-600">InvoiceFlow</h1>
+            <a href="/dashboard" className="text-2xl font-bold text-blue-600">InvoiceFlow</a>
             <div className="flex gap-6">
               <a href="/invoices" className="text-gray-600 hover:text-gray-900">
                 Invoices
