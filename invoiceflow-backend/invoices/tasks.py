@@ -1,6 +1,9 @@
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Invoice
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 def send_invoice_email_sync(invoice_id, recipient_email):
     """Enviar invoice por email (synchronous)"""
